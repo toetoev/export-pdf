@@ -15,8 +15,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.post('/createPDF', (req, res) => {
 	const data = req.body;
 	res.send('Received a POST HTTP method');
-	exportPDF(data);
+	exportPDF(data, req, res);
 });
+
+app.get('/download/:file(*)', downloadFunc);
 
 const compile = async function(templateName, data){
 	const filePath = path.join(process.cwd(), 'views', `${templateName}.html`);
@@ -28,7 +30,7 @@ handlebars.registerHelper('dateFormat', function(value, format){
 	return moment(value).format(format);
 })
 
-async function exportPDF(data){
+async function exportPDF(data, req, res){
 	try{
 		const browser = await puppeteer.launch();
 		const page = await browser.newPage();
@@ -43,14 +45,31 @@ async function exportPDF(data){
 			printBackground: true
 		});
 
-		console.log('done');
 		await browser.close();
-		//process.exit();
+
+		let filename = result.filename.split('\\').slice(-1)[0];
+		res.status(200).json({
+			'status': 'success',
+			'message': 'PDF Successfully created',
+			'link': process.env.HOST_ADDRESS + '/download/' + filename
+		});
+
 	}
 	catch(e){
-		console.log(e);
+		res.status(500).json({
+			'status': 'error',
+			'message': 'Failed! Please Try Again!' + e,
+		});
 	}
 };
+
+function downloadFunc (req, res,next) {
+	let file = req.params.file;
+	console.log(file);
+	let fileLocation = path.join('./pdf',file);
+	console.log(fileLocation);
+	res.download(fileLocation, file);
+}
 
 app.listen(8080, () => console.log(`Started server at http://localhost:8080!`));
 module.exports = router;
