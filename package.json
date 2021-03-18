@@ -3,18 +3,23 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "deploy": "serverless deploy"
   },
   "dependencies": {
+    "aws-serverless-express": "^3.4.0",
     "body-parser": "^1.19.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
-    "express": "~4.16.1",
+    "express": "^4.16.4",
     "handlebars": "^4.7.7",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
+    "moment": "^2.29.1",
     "morgan": "~1.9.1",
-    "puppeteer": "^8.0.0"
+    "puppeteer": "^8.0.0",
+    "serverless": "^2.30.3",
+    "serverless-http": "^2.7.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.2.5",

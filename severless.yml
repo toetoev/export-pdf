@@ -1,0 +1,14 @@
+service: aws-lambda-tut
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  stage: test-stage
+  region: us-east-2
+
+function:
+  api:
+    handler: lambda.handler
+    events:
+      - http: ANY {proxy+}
+      - http: ANY /
